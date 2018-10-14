@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <title>Oldschool demo effects</title>
+<style type="text/css">
+body {
+  background-color: #000;
+  color: #eee;
+  font-family: sans-serif;
+}
+a {
+  color: #8ca;
+  font-weight: bold;
+  text-decoration: none;
+}
+h2 {
+  margin-left: 1ch;
+  border-bottom: 1px solid #aac;
+}
+body > div {
+  margin-left: 6ch;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+p {
+  width: 60ch;
+  margin-right: 2ch;
+}
+canvas {
+  border: 1px solid #fff;
+  vertical-align: text-top;
+}
+input[type=button] {
+  width: 10ch;
+}
+</style>
+  </head>
+  <body>
+    <h1>Oldschool Demo Effects</h1>
+    <div>
+      <div>
+        <p>
+        This is a small collection of oldschool demo effects.  These effects
+        all use direct pixel manipulation to achieve their result.  None of
+        them use any hardware acceleration, or anything more advanced than a
+        simple array of pixel data.
+        </p>
+        <p>
+        All effects are written in typescript.  You can view the source on
+        <a href="https://github.com/mrkite/demofx">github</a>.
+        I also link to each individual effect alongside the demos below.
+        </p>
+      </div>
+    </div>
+
+    <h2>RotoZoom</h2>
+    <div>
+      <div>
+        <p>
+        The rotozoom is a simple effect that goes through each pixel on the
+        screen and maps the coordinate of that pixel backwards through a
+        sin/cos transform to determine which coordinate of the source image
+        to use.  By applying a scale to that transform you also achieve the
+        zooming part of the rotozoom effect.  Finally, the source coordinate
+        is wrapped using modulo to give a tiling effect.
+        </p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/src/rotozoom.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('rotozoom', this)" value="Run" />
+        <canvas id="rotozoom" width="640" height="400" />
+      </div>
+    </div>
+
+    <h2>Fire</h2>
+    <div>
+      <div>
+        <p>The fire effect is a classic.  The way it works is with an array
+        of color indices into a palette.  The palette is arranged so that it
+        fades from black at the bottom of the palette, to orangish red in
+        the higher indices.  On each frame, the array is traversed and each
+        pixel is averaged with adjacent pixels.  It is then darkened slighly
+        so that the pixels on higher rows are darker than the ones below it.
+        The bottom row (just offscreen) is filled with random indices.  This
+        becomes the fuel of the fire effect.</p>
+        <p>Because the fire is darkened by a constant value, the fire is
+        limited vertically.  The classic fire effect is optimized for 55
+        pixels high.  I do the same here, using the canvas to scale the
+        output.</p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/src/fire.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('fire', this)" value="Run" />
+        <canvas id="fire" width="80" height="50" style="width: 640px; height:
+        400px" />
+      </div>
+    </div>
+
+    <h2>Plasma</h2>
+    <div>
+      <div>
+        <p>
+        There are many versions of plasma.  This particular version is a
+        paletteless plasma which is created by adding multiple sin waves
+        together, combined with distortion generated doing things like
+        calculating the distance between pixels.
+        </p>
+        <p>
+        The color is determined by assigning different parts of the plasma
+        to different color channels.  Because I use the frame time for the
+        inputs to the various functions, the plasma will distort and simplify
+        given enough time.
+        </p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/src/plasma.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('plasma', this)" value="Run" />
+        <canvas id="plasma" width="640" height="400" />
+      </div>
+    </div>
+
+    <h2>Metablobs</h2>
+    <div>
+      <div>
+        <p>
+        To draw this effect, we loop through each pixel and calculate the
+        distance from that pixel to each blob.  Then we multiply all these
+        distances together and divide by a constant.  Then we subtract this
+        value from another constant, and clamp the result.  How we choose the
+        various constants determines how big the blobs are and how fuzzy they
+        are.
+        </p>
+        <p>
+        Changing the number of blobs or the resolution of the screen requires
+        a lot of hand-adjusting the constants to give a good effect.
+        </p>
+        <p>
+        The blobs can move around however you like.  I just have them running
+        in various lissajous curves.
+        </p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/src/blobs.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('blob', this)" value="Run" />
+        <canvas id="blob" width="640" height="400" />
+      </div>
+    </div>
+
+    <h2>Tunnel</h2>
+    <div>
+      <div>
+        <p>
+        The tunnel effect is accomplished by using 3 arrays, each the size
+        of the screen.  The first array contains the distance from that pixel
+        to the center of the screen, scaled and modulated by the height of
+        the texture.  The second array contains the angle from that pixel
+        to the center of the screen.  The third array contains a clamped
+        distance from the center of the screen.
+        </p>
+        <p>
+        These arrays are calculated only once.  Then they are used to calculate
+        the coordinates of the texture.  The first array determines the
+        x coordinate of the texture.  The second array determines the y
+        coordinate.  The third array determines how to darken the texture so
+        that the center of the tunnel is blackened.
+        </p>
+        <p>
+        Finally, to pan the center of the tunnel around, we actually make
+        the arrays twice the screen size and simply pan around the arrays.
+        </p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/src/tunnel.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('tunnel', this)" value="Run" />
+        <canvas id="tunnel" width="640" height="400" />
+      </div>
+    </div>
+    <script src="demo.js"></script>
+  </body>
+</html>
