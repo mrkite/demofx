@@ -21,6 +21,7 @@
     "src/fire.ts",
     "src/plasma.ts",
     "src/blobs.ts",
-    "src/tunnel.ts"
+    "src/tunnel.ts",
+    "src/moire.ts"
   ]
 }

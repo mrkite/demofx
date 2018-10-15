@@ -190,6 +190,30 @@ input[type=button] {
         <canvas id="tunnel" width="640" height="400" />
       </div>
     </div>
+    <h2>Moire</h2>
+    <div>
+      <div>
+        <p>
+        The moire effect is rather simple.  You have two points that act as the
+        foci of the moire effect.  For each pixel, you calculate the
+        distances from that pixel to both points.  XOR these distances together,
+        and then divide by the desired ring width.  If the result is odd, make
+        it one color, otherwise another color.  This produces the moire effect.
+        </p>
+        <p>
+        Again, you can move the foci points however you want, I again have them
+        running in lissajous curves.
+        </p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/blob/master/src/moire.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('moire', this)" value="Run" />
+        <canvas id="moire" width="640" height="400" />
+      </div>
+    </div>
     <script src="demo.js"></script>
   </body>
 </html>

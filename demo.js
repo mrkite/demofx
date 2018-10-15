@@ -395,4 +395,43 @@ var Tunnel = (function () {
     return Tunnel;
 }());
 demoFX.register("tunnel", new Tunnel());
+var Moire = (function () {
+    function Moire() {
+    }
+    Moire.prototype.init = function (width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.width = width;
+                this.height = height;
+                return [2];
+            });
+        });
+    };
+    Moire.prototype.render = function (ctx, t) {
+        var dest = ctx.getImageData(0, 0, this.width, this.height);
+        var time = t / 1000;
+        var cx1 = Math.sin(time / 2) * this.width / 3 + this.width / 2;
+        var cy1 = Math.sin(time / 4) * this.height / 3 + this.height / 2;
+        var cx2 = Math.cos(time / 3) * this.width / 3 + this.width / 2;
+        var cy2 = Math.cos(time) * this.height / 3 + this.height / 2;
+        var destOfs = 0;
+        for (var y = 0; y < this.height; y++) {
+            var dy = (y - cy1) * (y - cy1);
+            var dy2 = (y - cy2) * (y - cy2);
+            for (var x = 0; x < this.width; x++) {
+                var dx = (x - cx1) * (x - cx1);
+                var dx2 = (x - cx2) * (x - cx2);
+                var shade = (((Math.sqrt(dx + dy) ^
+                    Math.sqrt(dx2 + dy2)) >> 4) & 1) * 255;
+                dest.data[destOfs++] = shade;
+                dest.data[destOfs++] = shade;
+                dest.data[destOfs++] = shade;
+                dest.data[destOfs++] = 0xff;
+            }
+        }
+        ctx.putImageData(dest, 0, 0);
+    };
+    return Moire;
+}());
+demoFX.register("moire", new Moire());
 //# sourceMappingURL=demo.js.map
