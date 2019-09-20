@@ -214,6 +214,32 @@ input[type=button] {
         <canvas id="moire" width="640" height="400" />
       </div>
     </div>
+    <h2>Rain</h2>
+    <div>
+      <div>
+        <p>
+        The rain effect is deviously simple.  There are two arrays the size
+        of the screen.  Each element in the arrays represent the amplitiude of
+        the wave at that location.  The algorithm takes the previous array and
+        averages the surrounding amplitudes and subtracts the current amplitude
+        from that.  Then the new amplitude is dampened in order to make the
+        ripples die off.  Then the arrays are swapped.  This actually causes
+        the amplitude to oscillate like a wave.
+        We then use the amplitude to distort our texture, calculating the
+        delta amplitude from left to right and top to bottom.  These deltas
+        are then used to modify the texture's coordinates and darken the
+        resulting pixel.
+        </p>
+        <p>
+        You can view the source
+        <a href="https://github.com/mrkite/demofx/blob/master/src/rain.ts">here</a>.
+        </p>
+      </div>
+      <div>
+        <input type="button" onclick="toggle('rain', this)" value="Run" />
+        <canvas id="rain" width="640" height="400" />
+      </div>
+    </div>
     <script src="demo.js"></script>
   </body>
 </html>

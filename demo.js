@@ -13,8 +13,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -72,8 +72,8 @@ var DemoFX = (function () {
     };
     DemoFX.prototype.toggle = function (name, el) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var fx, canvas, ctx, render;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -434,4 +434,68 @@ var Moire = (function () {
     return Moire;
 }());
 demoFX.register("moire", new Moire());
+var Rain = (function () {
+    function Rain() {
+        this.lastTicks = 0;
+    }
+    Rain.prototype.init = function (width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        this.width = width;
+                        this.height = height;
+                        this.dest = new Int16Array(width * height);
+                        this.source = new Int16Array(width * height);
+                        _a = this;
+                        return [4, demoFX.loadImage("tile.jpg")];
+                    case 1:
+                        _a.tex = _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    Rain.prototype.render = function (ctx, t) {
+        var dest = ctx.getImageData(0, 0, this.width, this.height);
+        var end = (this.height - 1) * this.width;
+        if (t / 1000 - this.lastTicks > 0.5) {
+            var rx = Math.floor(Math.random() * this.width);
+            var ry = Math.floor(Math.random() * this.height);
+            this.source[ry * this.width + rx] = Math.round(Math.random() * 0x3000);
+            this.lastTicks = t / 1000;
+        }
+        for (var i = this.width; i < end; i++) {
+            this.dest[i] = ((this.source[i - 1] +
+                this.source[i + 1] +
+                this.source[i - this.width] +
+                this.source[i + this.width]) >> 1) - this.dest[i];
+            this.dest[i] -= (this.dest[i] >> 5);
+        }
+        var tmp = this.dest;
+        this.dest = this.source;
+        this.source = tmp;
+        for (var y = 1; y < this.height - 1; y++) {
+            var ofs = y * this.width;
+            for (var x = 1; x < this.width - 1; x++) {
+                var dx = this.source[ofs + x - 1] - this.source[ofs + x + 1];
+                var dy = this.source[ofs + x - this.width] -
+                    this.source[ofs + x + this.width];
+                var tx = ((y + dy) & 0x1ff) * this.tex.width * 4 +
+                    ((x + dx) & 0x1ff) * 4;
+                var r = this.tex.data[tx];
+                var g = this.tex.data[tx + 1];
+                var b = this.tex.data[tx + 2];
+                dest.data[ofs * 4 + x * 4] = Math.min(Math.max(r - dx, 0), 255);
+                dest.data[ofs * 4 + x * 4 + 1] = Math.min(Math.max(g - dx, 0), 255);
+                dest.data[ofs * 4 + x * 4 + 2] = Math.min(Math.max(b - dx, 0), 255);
+                dest.data[ofs * 4 + x * 4 + 3] = 0xff;
+            }
+        }
+        ctx.putImageData(dest, 0, 0);
+    };
+    return Rain;
+}());
+demoFX.register("rain", new Rain());
 //# sourceMappingURL=demo.js.map

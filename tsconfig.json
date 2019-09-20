@@ -22,6 +22,7 @@
     "src/plasma.ts",
     "src/blobs.ts",
     "src/tunnel.ts",
-    "src/moire.ts"
+    "src/moire.ts",
+    "src/rain.ts"
   ]
 }
