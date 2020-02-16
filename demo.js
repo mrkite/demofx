@@ -394,7 +394,9 @@ var Tunnel = (function () {
     };
     return Tunnel;
 }());
+
 demoFX.register("tunnel", new Tunnel());
+
 var Moire = (function () {
     function Moire() {
     }
@@ -410,19 +412,36 @@ var Moire = (function () {
     Moire.prototype.render = function (ctx, t) {
         var dest = ctx.getImageData(0, 0, this.width, this.height);
         var time = t / 1000;
+
         var cx1 = Math.sin(time / 2) * this.width / 3 + this.width / 2;
         var cy1 = Math.sin(time / 4) * this.height / 3 + this.height / 2;
+
         var cx2 = Math.cos(time / 3) * this.width / 3 + this.width / 2;
         var cy2 = Math.cos(time) * this.height / 3 + this.height / 2;
+
+        var cx3 = Math.cos(time / 7) * this.width / 3 + this.width / 2;
+        var cy3 = Math.cos(time) * this.height / 7 + this.height / 2;
+
         var destOfs = 0;
         for (var y = 0; y < this.height; y++) {
+
             var dy = (y - cy1) * (y - cy1);
+
             var dy2 = (y - cy2) * (y - cy2);
+
+            var dy3 = (y - cy3) * (y - cy3);
+
             for (var x = 0; x < this.width; x++) {
+
                 var dx = (x - cx1) * (x - cx1);
+
                 var dx2 = (x - cx2) * (x - cx2);
-                var shade = (((Math.sqrt(dx + dy) ^
-                    Math.sqrt(dx2 + dy2)) >> 4) & 1) * 255;
+
+                var dx3 = (x - cx3) * (x - cx3);
+
+                var shade = (((Math.sqrt(dx + dy) ^ 
+                               Math.sqrt(dx2 + dy2) ^
+                               Math.sqrt(dx3 + dy3)) >> 4) & 1) * 255;
                 dest.data[destOfs++] = shade;
                 dest.data[destOfs++] = shade;
                 dest.data[destOfs++] = shade;
@@ -433,7 +452,9 @@ var Moire = (function () {
     };
     return Moire;
 }());
+
 demoFX.register("moire", new Moire());
+
 var Rain = (function () {
     function Rain() {
         this.lastTicks = 0;
